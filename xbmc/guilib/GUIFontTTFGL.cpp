@@ -231,6 +231,16 @@ void CGUIFontTTFGL::LastEnd()
       glMatrixModview.Get().Translatef(m_vertexTrans[i].translateX, m_vertexTrans[i].translateY, m_vertexTrans[i].translateZ);
       glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glMatrixModview.Get());
 
+      {
+        static bool broken = false;
+        void *buffer = m_vertexTrans[i].vertexBuffer->bufferHandle;
+        if (!broken && ((GLuint) ((long) buffer & 0xffff) != (GLuint) buffer))
+        {
+          broken = true;
+          CLog::Log(LOGERROR, "GUIFontTTFGL::LastEnd: GLuint bufferHandle exceeded 16-bit mask");
+        }
+      }
+
       // Bind the buffer to the OpenGL context's GL_ARRAY_BUFFER binding point
       glBindBuffer(GL_ARRAY_BUFFER, (GLuint) m_vertexTrans[i].vertexBuffer->bufferHandle);
 
