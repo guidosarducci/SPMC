@@ -897,7 +897,9 @@ void CXBMCApp::onReceive(CJNIIntent intent)
     bool up = (keyevt.getAction() == CJNIKeyEvent::ACTION_UP);
 
     CLog::Log(LOGINFO, "Got MEDIA_BUTTON intent: %d, up:%s", keycode, up ? "true" : "false");
-    if (keycode == CJNIKeyEvent::KEYCODE_MEDIA_RECORD)
+    if (!g_application.m_pPlayer->IsPlaying())
+      CLog::Log(LOGINFO, "Ignore MEDIA_BUTTON intent: no media playing");
+    else if (keycode == CJNIKeyEvent::KEYCODE_MEDIA_RECORD)
       CAndroidKey::XBMC_Key(keycode, XBMCK_RECORD, 0, 0, up);
     else if (keycode == CJNIKeyEvent::KEYCODE_MEDIA_EJECT)
       CAndroidKey::XBMC_Key(keycode, XBMCK_EJECT, 0, 0, up);
