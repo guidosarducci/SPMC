@@ -39,6 +39,7 @@ public class Main extends NativeActivity implements Choreographer.FrameCallback
   private Handler handler = new Handler();
   private Intent mNewIntent = null;
   private int mNewIntentDelay = 0;
+  private AudioManager mAudioManager = null;
 
   native void _onNewIntent(Intent intent);
   native void _onActivityResult(int requestCode, int resultCode, Intent resultData);
@@ -199,14 +200,12 @@ public class Main extends NativeActivity implements Choreographer.FrameCallback
 
   public void registerMediaButtonEventReceiver()
   {
-    AudioManager manager = (AudioManager) getSystemService(AUDIO_SERVICE);
-    manager.registerMediaButtonEventReceiver(new ComponentName(getPackageName(), XBMCBroadcastReceiver.class.getName()));
+    mAudioManager.registerMediaButtonEventReceiver(new ComponentName(getPackageName(), XBMCBroadcastReceiver.class.getName()));
   }
 
   public void unregisterMediaButtonEventReceiver()
   {
-    AudioManager manager = (AudioManager) getSystemService(AUDIO_SERVICE);
-    manager.unregisterMediaButtonEventReceiver(new ComponentName(getPackageName(), XBMCBroadcastReceiver.class.getName()));
+    mAudioManager.unregisterMediaButtonEventReceiver(new ComponentName(getPackageName(), XBMCBroadcastReceiver.class.getName()));
   }
 
   public void screenOn()
@@ -241,9 +240,9 @@ public class Main extends NativeActivity implements Choreographer.FrameCallback
     mSettingsContentObserver = new XBMCSettingsContentObserver(this, handler);
     getApplicationContext().getContentResolver().registerContentObserver(android.provider.Settings.System.CONTENT_URI, true, mSettingsContentObserver );
 
+    mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      AudioManager audioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
-      audioManager.registerAudioDeviceCallback(new MyAudioDeviceCallback(), null);
+      mAudioManager.registerAudioDeviceCallback(new MyAudioDeviceCallback(), null);
     }
     mJsonRPC = new XBMCJsonRPC();
 
