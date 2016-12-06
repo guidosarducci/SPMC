@@ -287,6 +287,22 @@ bool CWinSystemEGL::CreateNewWindow(const std::string& name, bool fullScreen, RE
   m_displayHeight = res.iScreenHeight;
   m_fRefreshRate  = res.fRefreshRate;
 
+  if (g_advancedSettings.CanLogComponent(LOGVIDEO))
+  {
+    CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: m_bWindowCreated %d / m_egl %p\n", m_bWindowCreated, m_egl);
+    if (m_bWindowCreated && m_egl && m_egl->GetNativeResolution(&current_resolution))
+    {
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: current_resolution.iWidth %d / res.iWidth %d\n", current_resolution.iWidth, res.iWidth);
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: current_resolution.iHeight %d / res.iHeight %d\n", current_resolution.iHeight, res.iHeight);
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: current_resolution.iScreenWidth %d / res.iScreenWidth %d\n", current_resolution.iScreenWidth, res.iScreenWidth);
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: current_resolution.iScreenHeight %d / res.iScreenHeight %d\n", current_resolution.iScreenHeight, res.iScreenHeight);
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: m_bFullScreen %d / fullScreen %d\n", m_bFullScreen, fullScreen);
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: current_resolution.fRefreshRate %f / res.fRefreshRate %f\n", current_resolution.fRefreshRate, res.fRefreshRate);
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: current_resolution.dwFlags %#lx / res.dwFlags %#lx\n", current_resolution.dwFlags & D3DPRESENTFLAG_MODEMASK, res.dwFlags & D3DPRESENTFLAG_MODEMASK);
+      CLog::Log(LOGDEBUG, "CWinSystemEGL::CreateNewWindow: m_stereo_mode %d / stereo_mode %d\n", m_stereo_mode, stereo_mode);
+    }
+  }
+
   if ((m_bWindowCreated && m_egl && m_egl->GetNativeResolution(&current_resolution)) &&
     current_resolution.iWidth == res.iWidth && current_resolution.iHeight == res.iHeight &&
     current_resolution.iScreenWidth == res.iScreenWidth && current_resolution.iScreenHeight == res.iScreenHeight &&
